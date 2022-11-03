@@ -21,6 +21,8 @@ namespace WebApiLibrary
             services.AddAutoMapper(typeof(Startup));
 
             services.AddTransient<FileManager>();
+            services.AddSingleton<EmailSender>();
+
             services.AddHttpContextAccessor();
 
             services.AddDbContext<ApplicationDbContext>(options =>
