@@ -1,7 +1,10 @@
-﻿namespace WebApiLibrary.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WebApiLibrary.DTOs
 {
     public class UsuarioEdicionDTO
     {
-        public IFormFile Imagen { get; set; }
+        [Url]
+        public string Imagen { get; set; }
     }
 }
