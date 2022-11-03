@@ -29,6 +29,7 @@ namespace WebApiLibrary.Helpers
                     usuariodto => usuariodto.CantidadSuscripciones,
                     opciones => opciones
                         .MapFrom(MapCantidadSuscripciones));
+            CreateMap<UsuarioEdicionDTO, Usuario>();
         
         }
 

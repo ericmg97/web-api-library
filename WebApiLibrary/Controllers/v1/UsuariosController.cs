@@ -41,6 +41,23 @@ namespace WebApiLibrary.Controllers.v1
             return new CreatedAtRouteResult("getUsers", new { id = user.Id }, userDTO);
         }
 
+        [HttpPut("{id:int}", Name = "updateUser")]
+        public async Task<ActionResult> Put(int id, [FromForm] UsuarioEdicionDTO userDTO)
+        {
+            var userdb = await context.Usuarios.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (userdb == null)
+            {
+                return NotFound();
+            }
+
+            var user = mapper.Map<Usuario>(userDTO);
+            context.Entry(user).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         [HttpDelete("{id:int}", Name = "delUser")]
         public async Task<ActionResult> Delete(int id)
         {
