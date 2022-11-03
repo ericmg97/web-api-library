@@ -20,16 +20,7 @@ namespace WebApiLibrary.Controllers.v1
             this.mapper = mapper;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<AutorDTO>>> Get()
-        {
-            var entities = await context.Autores.ToListAsync();
-            var dtos = mapper.Map<List<AutorDTO>>(entities);
-            return dtos;
-
-        }
-
-        [HttpGet("{id:int}", Name ="getAuthors")]
+        [HttpGet("{id:int}", Name ="getAuthor")]
         public async Task<ActionResult<AutorDTO>> Get(int id)
         {
             var entity = await context.Autores.FirstOrDefaultAsync(x => x.Id == id);
@@ -50,35 +41,7 @@ namespace WebApiLibrary.Controllers.v1
             context.Add(author);
             await context.SaveChangesAsync();
 
-            return new CreatedAtRouteResult("getAuthors", new { id = author.Id }, authorDto);
+            return new CreatedAtRouteResult("getAuthor", new { id = author.Id }, authorDto);
         }
-
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult> Put(int id, [FromBody] AutorDTO authorDto)
-        {
-            var author = mapper.Map<Autor>(authorDto);
-            author.Id = id;
-            context.Entry(author).State = EntityState.Modified;
-            await context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            var exists = await context.Autores.AnyAsync(x => x.Id == id);
-
-            if (!exists)
-            {
-                return NotFound();
-            }
-
-            context.Remove(new Autor { Id = id });
-            await context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
     }
 }
