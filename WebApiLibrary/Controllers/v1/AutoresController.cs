@@ -20,19 +20,10 @@ namespace WebApiLibrary.Controllers.v1
             this.mapper = mapper;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<AutorDTO>>> Get()
-        {
-            var entitys = await context.Autores.ToListAsync();
-            var dtos = mapper.Map<List<AutorDTO>>(entitys);
-            return dtos;
-
-        }
-
-        [HttpGet("{id:int}", Name ="getAuthors")]
+        [HttpGet("{id:int}", Name ="getAuthor")]
         public async Task<ActionResult<AutorDTO>> Get(int id)
         {
-            var entity = await context.Autores.FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await context.Autores.Include(autoresdb => autoresdb.Libros).FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity == null)
             {
@@ -44,41 +35,24 @@ namespace WebApiLibrary.Controllers.v1
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] AutorDTO authorDto)
+        public async Task<ActionResult> Post([FromBody] AutorCreacionDTO authorDto)
         {
             var author = mapper.Map<Autor>(authorDto);
             context.Add(author);
             await context.SaveChangesAsync();
 
-            return new CreatedAtRouteResult("getAuthors", new { id = author.Id }, authorDto);
+            return new CreatedAtRouteResult("getAuthor", new { id = author.Id }, authorDto);
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult> Put(int id, [FromBody] AutorDTO authorDto)
+        [HttpPost("{id:int}/books")]
+        public async Task<ActionResult> Post(int id, LibroCreacionDTO libroDto)
         {
-            var author = mapper.Map<Autor>(authorDto);
-            author.Id = id;
-            context.Entry(author).State = EntityState.Modified;
+            var book = mapper.Map<Libro>(libroDto);
+            book.AutorId = id;
+            context.Add(book);
             await context.SaveChangesAsync();
 
-            return NoContent();
+            return new CreatedAtRouteResult("getBook", new { id = book.Id }, libroDto);
         }
-
-        [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            var exists = await context.Autores.AnyAsync(x => x.Id == id);
-
-            if (!exists)
-            {
-                return NotFound();
-            }
-
-            context.Remove(new Autor { Id = id });
-            await context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
     }
 }

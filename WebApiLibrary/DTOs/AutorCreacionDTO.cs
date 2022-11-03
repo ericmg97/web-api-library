@@ -2,11 +2,14 @@
 
 namespace WebApiLibrary.DTOs
 {
-    public class AutorDTO
+    public class AutorCreacionDTO
     {
+        [StringLength(100)]
         public string Nombre { get; set; }
+        [Required]
+        [StringLength(50)]
         public string Nacionalidad { get; set; }
+        [Required]
         public DateTime FechaDeNacimiento { get; set; }
-        public List<LibroAutorDTO> Libros { get; set; }
     }
 }

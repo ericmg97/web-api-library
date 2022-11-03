@@ -13,5 +13,7 @@ namespace WebApiLibrary.Models
         public string Nacionalidad { get; set; }
         [Required]
         public DateTime FechaDeNacimiento { get; set; }
+        public List<Libro> Libros { get; set; }
+
     }
 }
