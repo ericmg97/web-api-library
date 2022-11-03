@@ -8,5 +8,6 @@ namespace WebApiLibrary.DTOs
         public string Nacionalidad { get; set; }
         public DateTime FechaDeNacimiento { get; set; }
         public List<LibroAutorDTO> Libros { get; set; }
+        public int CantidadSuscriptores { get; set; }
     }
 }
