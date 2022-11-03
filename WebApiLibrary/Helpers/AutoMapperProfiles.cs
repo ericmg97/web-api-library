@@ -11,14 +11,28 @@ namespace WebApiLibrary.Helpers
             CreateMap<Autor, AutorDTO>()
                 .ForMember(
                     autorDTO => autorDTO.Libros,
-                    opciones => opciones.MapFrom(MapLibroAutorDTO));
+                    opciones => opciones.MapFrom(MapLibroAutorDTO))
+                .ForMember(
+                    autorDTO => autorDTO.CantidadSuscriptores,
+                    opciones => opciones.MapFrom(MapCantidadSuscriptores));
 
             CreateMap<AutorCreacionDTO, Autor>();
             CreateMap<Libro, LibroCreacionDTO>().ReverseMap();
             CreateMap<Libro, LibroDTO>()
                 .ForMember(
                     libroDTO => libroDTO.NombreAutor,
-                    opciones => opciones.MapFrom(MapNombreAutorLibro)); ;
+                    opciones => opciones
+                        .MapFrom(libro => libro.Autor.Nombre));
+            CreateMap<Usuario, UsuarioCreacionDTO>().ReverseMap();
+            CreateMap<Usuario, UsuarioDTO>()
+                .ForMember(
+                    usuariodto => usuariodto.CantidadSuscripciones,
+                    opciones => opciones
+                        .MapFrom(MapCantidadSuscripciones));
+
+            CreateMap<UsuarioEdicionDTO, Usuario>()
+                .ForMember(x => x.Imagen, opciones => opciones.Ignore());
+        
         }
 
         private List<LibroAutorDTO> MapLibroAutorDTO(Autor autor, AutorDTO autordto)
@@ -40,9 +54,18 @@ namespace WebApiLibrary.Helpers
             return resultado;
         }
 
-        private string MapNombreAutorLibro(Libro libro, LibroDTO librodto)
+        private int MapCantidadSuscriptores(Autor autor, AutorDTO autordto)
         {
-            return libro.Autor.Nombre;
+            if (autor.UsuariosSuscritos == null) { return 0; }
+
+            return autor.UsuariosSuscritos.Count;
+        }
+
+        private int MapCantidadSuscripciones(Usuario autor, UsuarioDTO autordto)
+        {
+            if (autor.Suscripciones == null) { return 0; }
+
+            return autor.Suscripciones.Count;
         }
     }
 }

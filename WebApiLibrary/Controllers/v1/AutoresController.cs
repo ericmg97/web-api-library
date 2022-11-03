@@ -23,7 +23,10 @@ namespace WebApiLibrary.Controllers.v1
         [HttpGet("{id:int}", Name ="getAuthor")]
         public async Task<ActionResult<AutorDTO>> Get(int id)
         {
-            var entity = await context.Autores.Include(autoresdb => autoresdb.Libros).FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await context.Autores
+                .Include(autoresdb => autoresdb.Libros)
+                .Include(autoresdb => autoresdb.UsuariosSuscritos)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity == null)
             {
