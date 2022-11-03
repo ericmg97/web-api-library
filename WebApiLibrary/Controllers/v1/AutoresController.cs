@@ -23,8 +23,8 @@ namespace WebApiLibrary.Controllers.v1
         [HttpGet]
         public async Task<ActionResult<List<AutorDTO>>> Get()
         {
-            var entitys = await context.Autores.ToListAsync();
-            var dtos = mapper.Map<List<AutorDTO>>(entitys);
+            var entities = await context.Autores.ToListAsync();
+            var dtos = mapper.Map<List<AutorDTO>>(entities);
             return dtos;
 
         }
