@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApiLibrary.DTOs
 {
@@ -10,7 +11,6 @@ namespace WebApiLibrary.DTOs
         [EmailAddress]
         [Required]
         public string Email { get; set; }
-        [Url]
-        public string Imagen { get; set; }
+        public IFormFile Imagen { get; set; }
     }
 }

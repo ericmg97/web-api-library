@@ -4,6 +4,7 @@ namespace WebApiLibrary.DTOs
 {
     public class UsuarioDTO
     {
+        public int Id { get; set; }
         [StringLength(100)]
         [Required]
         public string Nombre { get; set; }

@@ -29,6 +29,9 @@ namespace WebApiLibrary.Helpers
                     usuariodto => usuariodto.CantidadSuscripciones,
                     opciones => opciones
                         .MapFrom(MapCantidadSuscripciones));
+
+            CreateMap<UsuarioEdicionDTO, Usuario>()
+                .ForMember(x => x.Imagen, opciones => opciones.Ignore());
         
         }
 
