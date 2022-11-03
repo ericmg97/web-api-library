@@ -33,6 +33,7 @@ namespace WebApiLibrary.Controllers.v1
         public async Task<ActionResult> Post([FromBody] UsuarioCreacionDTO userDTO)
         {
             var user = mapper.Map<Usuario>(userDTO);
+            user.FechaRegistro = DateTime.Now;
             context.Add(user);
             await context.SaveChangesAsync();
 

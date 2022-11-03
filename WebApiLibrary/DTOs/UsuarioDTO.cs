@@ -12,6 +12,8 @@ namespace WebApiLibrary.DTOs
         public string Email { get; set; }
         [Url]
         public string Imagen { get; set; }
+        public DateTime FechaRegistro { get; set; }
+
         public int CantidadSuscripciones { get; set; }
     }
 }
