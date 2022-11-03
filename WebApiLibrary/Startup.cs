@@ -39,7 +39,6 @@ namespace WebApiLibrary
 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "WebApiLibrary v1.0"));
             }

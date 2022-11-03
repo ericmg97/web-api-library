@@ -30,13 +30,15 @@ namespace WebApiLibrary.Middlewares
             catch (Exception e)
             {
                 context.Response.StatusCode = 500;
-                var message = JsonConvert.SerializeObject(new
+                context.Response.Headers.Add("Content-Type", "application/json");
+
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(new
                 {
                     message = configuration["ErrorLoggingMiddleware:Message"],
                     description = e.Message
-                });
-                await context.Response.WriteAsync(message);
-                return;
+                }));
+
+                await context.Response.CompleteAsync();
             }
         }
     }
