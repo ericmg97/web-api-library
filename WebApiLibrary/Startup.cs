@@ -1,5 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
+using WebApiLibrary.Middlewares;
 
 namespace WebApiLibrary
 {
@@ -28,6 +29,8 @@ namespace WebApiLibrary
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseErrorHandling();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
