@@ -2,15 +2,15 @@
 {
     public class PaginacionDTO
     {
-        public int Offset { get; set; } = 0;
-        private int limit = 50;
+        public int offset { get; set; } = 0;
+        private int _limit = 50;
         private readonly int maxLimit = 100;
-        public int Limit 
+        public int limit 
         { 
-            get => limit;
+            get => _limit;
             set
             {
-                limit = (value > maxLimit) ? maxLimit : value;
+                _limit = (value > maxLimit) ? maxLimit : value;
             }
         }
     }

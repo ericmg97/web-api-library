@@ -22,13 +22,46 @@ namespace WebApiLibrary.Controllers.v1
         }
 
         [HttpGet(Name = "getBook")]
-        public async Task<ActionResult<List<LibroDTO>>> Get([FromQuery] PaginacionDTO pagdto)
+        public async Task<ActionResult<List<LibroDTO>>> Get([FromQuery] FiltroLibrosDTO librosDTO)
         {
             var queryable = context.Libros.AsQueryable();
-            await HttpContext.AddPaginationParams(queryable, pagdto.Offset);
+
+
+            if (librosDTO.authorId != null)
+            {
+                queryable = queryable.Where(x => x.AutorId == librosDTO.authorId);
+            }
+
+            if (librosDTO.editorialName != null)
+            {
+                queryable = queryable.Where(x => x.NombreEditorial.Contains(librosDTO.editorialName));
+            }
+
+            if (librosDTO.before != null)
+            {
+                queryable = queryable.Where(x => x.FechaDePublicacion < librosDTO.before);
+            }
+
+            if (librosDTO.after != null)
+            {
+                queryable = queryable.Where(x => x.FechaDePublicacion > librosDTO.after);
+            }
+
+            if (librosDTO.order != null)
+            {
+                if ((bool)librosDTO.order)
+                {
+                    queryable = queryable.OrderBy(x => x.PromedioCalificacion);
+                }
+                else
+                {
+                    queryable = queryable.OrderByDescending(x => x.PromedioCalificacion);
+
+                }
+            }
 
             var entities = await queryable
-                .Paginar(pagdto)
+                .Paginar(librosDTO)
                 .Include(librodb => librodb.Autor)
                 .ToListAsync();
             return mapper.Map<List<LibroDTO>>(entities);
@@ -60,7 +93,8 @@ namespace WebApiLibrary.Controllers.v1
             review.Fecha = DateTime.Now;
             context.Add(review);
 
-            book.PromedioCalificacion = (book.PromedioCalificacion * book.CantidadCalificacion  + (int)review.Calificacion) / (book.CantidadCalificacion + 1);
+            book.PromedioCalificacion = (float)Math.Round((book.PromedioCalificacion * book.CantidadCalificacion  + (int)review.Calificacion) / (book.CantidadCalificacion + 1), 2);
+
             book.CantidadCalificacion++;
 
             context.Entry(book).State = EntityState.Modified;
@@ -73,14 +107,33 @@ namespace WebApiLibrary.Controllers.v1
         }
 
         [HttpGet("{id:int}/reviews", Name = "getReviews")]
-        public async Task<ActionResult<List<ReviewDTO>>> GetReview(int id, [FromQuery] PaginacionDTO pagdto)
+        public async Task<ActionResult<List<ReviewDTO>>> GetReview(int id, [FromQuery] FiltroComentariosDTO filterdto)
         {
             var queryable = context.Calificaciones.Where(x => x.LibroId == id).AsQueryable();
-            await HttpContext.AddPaginationParams(queryable, pagdto.Offset);
+            
+            if (filterdto.reviewType != null)
+            {
+                queryable = queryable.Where(x => x.Calificacion == filterdto.reviewType);
+            }
+
+            if (filterdto.order != null)
+            {
+                if ((bool)filterdto.order)
+                {
+                    queryable = queryable.OrderBy(x => x.Fecha);
+                }
+                else
+                {
+                    queryable = queryable.OrderByDescending(x => x.Fecha);
+
+                }
+            }
 
             var entities = await queryable
-                .Paginar(pagdto)
+                .Paginar(filterdto)
+                .Include(x => x.Usuario)
                 .ToListAsync();
+
             return mapper.Map<List<ReviewDTO>>(entities);
         }
     }

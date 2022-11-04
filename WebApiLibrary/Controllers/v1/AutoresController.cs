@@ -61,6 +61,13 @@ namespace WebApiLibrary.Controllers.v1
                 return BadRequest();
             }
 
+            var authordb = await context.Autores.AnyAsync(context => context.Id == id);
+
+            if (!authordb)
+            {
+                return NotFound();
+            }
+
             var book = mapper.Map<Libro>(libroDto);
             book.AutorId = id;
             context.Add(book);
