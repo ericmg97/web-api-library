@@ -22,7 +22,7 @@ namespace WebApiLibrary.Controllers.v1
         }
 
         [HttpGet(Name = "getUsers")]
-        public async Task<ActionResult<List<UsuarioDTO>>> Get([FromQuery] PaginacionDTO pagdto)
+        public async Task<ActionResult<ListaUsuariosDTO>> Get([FromQuery] PaginacionDTO pagdto)
         {
             var queryable = context.Usuarios.AsQueryable();
             await HttpContext.AddPaginationParams(queryable, pagdto.Offset);
@@ -31,7 +31,13 @@ namespace WebApiLibrary.Controllers.v1
                 .Paginar(pagdto)
                 .Include(userdb => userdb.Suscripciones)
                 .ToListAsync();
-            return mapper.Map<List<UsuarioDTO>>(entities);
+
+            var listaUsuariosDTO = new ListaUsuariosDTO()
+            {
+                Total = entities.Count,
+                Usuarios = mapper.Map<List<UsuarioDTO>>(entities)
+            };
+            return listaUsuariosDTO;
         }
 
         [HttpPost]
