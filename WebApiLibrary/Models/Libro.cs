@@ -26,6 +26,7 @@ namespace WebApiLibrary.Models
         [Required]
         public string ISBN { get; set; }
         public int PromedioCalificacion { get; set; }
+        public int CantidadCalificacion { get; set; }
         public Autor Autor { get; set; }
     }
 }

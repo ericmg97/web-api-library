@@ -55,6 +55,12 @@ namespace WebApiLibrary.Controllers.v1
         [HttpPost("{id:int}/books")]
         public async Task<ActionResult> Post(int id, LibroCreacionDTO libroDto)
         {
+            var isbn = await context.Libros.AnyAsync(x => x.ISBN == libroDto.ISBN);
+            if (isbn)
+            {
+                return BadRequest();
+            }
+
             var book = mapper.Map<Libro>(libroDto);
             book.AutorId = id;
             context.Add(book);

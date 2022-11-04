@@ -1,4 +1,6 @@
-﻿namespace WebApiLibrary.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WebApiLibrary.Models
 {
     public enum EnumCalificacion
     {
@@ -11,9 +13,9 @@
 
     public class Review
     {
-        public int Id { get; set; }
         public int UsuarioId { get; set; }
         public int LibroId { get; set; }
+        [EnumDataType(typeof(EnumCalificacion), ErrorMessage = $"Las calificaciones deben estar entre 1 y 5 estrellas.")]
         public EnumCalificacion Calificacion { get; set; }
         public string Mensaje { get; set; }
         public DateTime Fecha { get; set; }

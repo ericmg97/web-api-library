@@ -33,6 +33,12 @@ namespace WebApiLibrary.Controllers.v1
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] UsuarioCreacionDTO userDTO)
         {
+            var email = await context.Usuarios.AnyAsync(x => x.Email == userDTO.Email);
+            if (email)
+            {
+                return BadRequest();
+            }
+
             var user = mapper.Map<Usuario>(userDTO);
             user.FechaRegistro = DateTime.Now;
             context.Add(user);

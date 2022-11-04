@@ -14,6 +14,10 @@ namespace WebApiLibrary
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Review>()
+                .HasKey(x => new { x.LibroId, x.UsuarioId });
+                
+
+            modelBuilder.Entity<Review>()
                 .Property(c => c.Calificacion)
                 .HasConversion<int>();
 

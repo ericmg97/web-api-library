@@ -12,8 +12,8 @@ using WebApiLibrary;
 namespace WebApiLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221104021609_ReviewsMessage")]
-    partial class ReviewsMessage
+    [Migration("20221104034258_Build")]
+    partial class Build
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -76,6 +76,9 @@ namespace WebApiLibrary.Migrations
                     b.Property<int>("AutorId")
                         .HasColumnType("int");
 
+                    b.Property<int>("CantidadCalificacion")
+                        .HasColumnType("int");
+
                     b.Property<int>("CantidadDePaginas")
                         .HasColumnType("int");
 
@@ -115,11 +118,11 @@ namespace WebApiLibrary.Migrations
 
             modelBuilder.Entity("WebApiLibrary.Models.Review", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("LibroId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Calificacion")
                         .HasColumnType("int");
@@ -127,18 +130,10 @@ namespace WebApiLibrary.Migrations
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("LibroId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Mensaje")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LibroId");
+                    b.HasKey("LibroId", "UsuarioId");
 
                     b.HasIndex("UsuarioId");
 
