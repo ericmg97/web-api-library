@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiLibrary.DTOs;
+using WebApiLibrary.Helpers;
 using WebApiLibrary.Models;
 
 namespace WebApiLibrary.Controllers.v1
@@ -21,9 +22,15 @@ namespace WebApiLibrary.Controllers.v1
         }
 
         [HttpGet(Name = "getBook")]
-        public async Task<ActionResult<List<LibroDTO>>> Get()
+        public async Task<ActionResult<List<LibroDTO>>> Get([FromQuery] PaginacionDTO pagdto)
         {
-            var entities = await context.Libros.Include(librodb => librodb.Autor).ToListAsync();
+            var queryable = context.Libros.AsQueryable();
+            await HttpContext.AddPaginationParams(queryable, pagdto.Offset);
+
+            var entities = await queryable
+                .Paginar(pagdto)
+                .Include(librodb => librodb.Autor)
+                .ToListAsync();
             return mapper.Map<List<LibroDTO>>(entities);
         }
 
@@ -66,9 +73,14 @@ namespace WebApiLibrary.Controllers.v1
         }
 
         [HttpGet("{id:int}/reviews", Name = "getReviews")]
-        public async Task<ActionResult<List<ReviewDTO>>> GetReview(int id)
+        public async Task<ActionResult<List<ReviewDTO>>> GetReview(int id, [FromQuery] PaginacionDTO pagdto)
         {
-            var entities = await context.Calificaciones.Where(x => x.LibroId == id).ToListAsync();
+            var queryable = context.Calificaciones.Where(x => x.LibroId == id).AsQueryable();
+            await HttpContext.AddPaginationParams(queryable, pagdto.Offset);
+
+            var entities = await queryable
+                .Paginar(pagdto)
+                .ToListAsync();
             return mapper.Map<List<ReviewDTO>>(entities);
         }
     }

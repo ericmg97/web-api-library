@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiLibrary.DTOs;
+using WebApiLibrary.Helpers;
 using WebApiLibrary.Models;
-using WebApiLibrary.Services;
 
 namespace WebApiLibrary.Controllers.v1
 {
@@ -22,9 +22,13 @@ namespace WebApiLibrary.Controllers.v1
         }
 
         [HttpGet(Name = "getUsers")]
-        public async Task<ActionResult<List<UsuarioDTO>>> Get()
+        public async Task<ActionResult<List<UsuarioDTO>>> Get([FromQuery] PaginacionDTO pagdto)
         {
-            var entities = await context.Usuarios
+            var queryable = context.Usuarios.AsQueryable();
+            await HttpContext.AddPaginationParams(queryable, pagdto.Offset);
+
+            var entities = await queryable
+                .Paginar(pagdto)
                 .Include(userdb => userdb.Suscripciones)
                 .ToListAsync();
             return mapper.Map<List<UsuarioDTO>>(entities);
