@@ -25,7 +25,6 @@ namespace WebApiLibrary.Controllers.v1
         public async Task<ActionResult<ListaUsuariosDTO>> Get([FromQuery] PaginacionDTO pagdto)
         {
             var queryable = context.Usuarios.AsQueryable();
-            await HttpContext.AddPaginationParams(queryable, pagdto.Offset);
 
             var entities = await queryable
                 .Paginar(pagdto)
