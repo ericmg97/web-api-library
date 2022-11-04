@@ -33,6 +33,12 @@ namespace WebApiLibrary.Controllers.v1
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] UsuarioCreacionDTO userDTO)
         {
+            var email = await context.Usuarios.AnyAsync(x => x.Email == userDTO.Email);
+            if (email)
+            {
+                return BadRequest();
+            }
+
             var user = mapper.Map<Usuario>(userDTO);
             user.FechaRegistro = DateTime.Now;
             context.Add(user);
@@ -42,7 +48,7 @@ namespace WebApiLibrary.Controllers.v1
         }
 
         [HttpPut("{id:int}", Name = "updateUser")]
-        public async Task<ActionResult> Put(int id, [FromForm] UsuarioEdicionDTO userDTO)
+        public async Task<ActionResult> Put(int id, [FromBody] UsuarioEdicionDTO userDTO)
         {
             var userdb = await context.Usuarios.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -51,8 +57,8 @@ namespace WebApiLibrary.Controllers.v1
                 return NotFound();
             }
 
-            var user = mapper.Map<Usuario>(userDTO);
-            context.Entry(user).State = EntityState.Modified;
+            userdb = mapper.Map(userDTO, userdb);
+            context.Entry(userdb).State = EntityState.Modified;
             await context.SaveChangesAsync();
 
             return NoContent();

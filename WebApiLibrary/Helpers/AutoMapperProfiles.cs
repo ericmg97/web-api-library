@@ -30,7 +30,8 @@ namespace WebApiLibrary.Helpers
                     opciones => opciones
                         .MapFrom(MapCantidadSuscripciones));
             CreateMap<UsuarioEdicionDTO, Usuario>();
-        
+            CreateMap<Review, ReviewCreacionDTO>().ReverseMap();
+            CreateMap<Review, ReviewDTO>();
         }
 
         private List<LibroAutorDTO> MapLibroAutorDTO(Autor autor, AutorDTO autordto)

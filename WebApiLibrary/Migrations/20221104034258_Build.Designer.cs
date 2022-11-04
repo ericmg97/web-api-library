@@ -12,8 +12,8 @@ using WebApiLibrary;
 namespace WebApiLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221103191126_Usuario")]
-    partial class Usuario
+    [Migration("20221104034258_Build")]
+    partial class Build
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -76,6 +76,9 @@ namespace WebApiLibrary.Migrations
                     b.Property<int>("AutorId")
                         .HasColumnType("int");
 
+                    b.Property<int>("CantidadCalificacion")
+                        .HasColumnType("int");
+
                     b.Property<int>("CantidadDePaginas")
                         .HasColumnType("int");
 
@@ -84,12 +87,15 @@ namespace WebApiLibrary.Migrations
 
                     b.Property<string>("ISBN")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("NombreEditorial")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("PromedioCalificacion")
+                        .HasColumnType("int");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
@@ -104,7 +110,34 @@ namespace WebApiLibrary.Migrations
 
                     b.HasIndex("AutorId");
 
+                    b.HasIndex("ISBN")
+                        .IsUnique();
+
                     b.ToTable("Libros");
+                });
+
+            modelBuilder.Entity("WebApiLibrary.Models.Review", b =>
+                {
+                    b.Property<int>("LibroId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Calificacion")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Mensaje")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("LibroId", "UsuarioId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Calificaciones");
                 });
 
             modelBuilder.Entity("WebApiLibrary.Models.Usuario", b =>
@@ -117,7 +150,7 @@ namespace WebApiLibrary.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("FechaRegistro")
                         .HasColumnType("datetime2");
@@ -131,6 +164,9 @@ namespace WebApiLibrary.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Usuarios");
                 });
@@ -159,6 +195,25 @@ namespace WebApiLibrary.Migrations
                         .IsRequired();
 
                     b.Navigation("Autor");
+                });
+
+            modelBuilder.Entity("WebApiLibrary.Models.Review", b =>
+                {
+                    b.HasOne("WebApiLibrary.Models.Libro", "Libro")
+                        .WithMany()
+                        .HasForeignKey("LibroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApiLibrary.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Libro");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("WebApiLibrary.Models.Autor", b =>

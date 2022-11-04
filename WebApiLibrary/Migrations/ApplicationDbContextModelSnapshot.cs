@@ -74,6 +74,9 @@ namespace WebApiLibrary.Migrations
                     b.Property<int>("AutorId")
                         .HasColumnType("int");
 
+                    b.Property<int>("CantidadCalificacion")
+                        .HasColumnType("int");
+
                     b.Property<int>("CantidadDePaginas")
                         .HasColumnType("int");
 
@@ -88,6 +91,9 @@ namespace WebApiLibrary.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("PromedioCalificacion")
+                        .HasColumnType("int");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
@@ -106,6 +112,30 @@ namespace WebApiLibrary.Migrations
                         .IsUnique();
 
                     b.ToTable("Libros");
+                });
+
+            modelBuilder.Entity("WebApiLibrary.Models.Review", b =>
+                {
+                    b.Property<int>("LibroId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Calificacion")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Mensaje")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("LibroId", "UsuarioId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Calificaciones");
                 });
 
             modelBuilder.Entity("WebApiLibrary.Models.Usuario", b =>
@@ -163,6 +193,25 @@ namespace WebApiLibrary.Migrations
                         .IsRequired();
 
                     b.Navigation("Autor");
+                });
+
+            modelBuilder.Entity("WebApiLibrary.Models.Review", b =>
+                {
+                    b.HasOne("WebApiLibrary.Models.Libro", "Libro")
+                        .WithMany()
+                        .HasForeignKey("LibroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApiLibrary.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Libro");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("WebApiLibrary.Models.Autor", b =>
