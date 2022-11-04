@@ -2,6 +2,7 @@
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using WebApiLibrary.Middlewares;
+using WebApiLibrary.Services;
 
 namespace WebApiLibrary
 {
@@ -18,6 +19,8 @@ namespace WebApiLibrary
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
+
+            services.AddSingleton<EmailSender>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));

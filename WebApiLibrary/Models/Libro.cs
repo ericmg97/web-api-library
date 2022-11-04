@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApiLibrary.Models
 {
+    [Index(propertyNames: nameof(ISBN), IsUnique = true)]
     public class Libro
     {
         public int Id { get; set; }
@@ -23,6 +25,8 @@ namespace WebApiLibrary.Models
         [MinLength(7)]
         [Required]
         public string ISBN { get; set; }
+        public int PromedioCalificacion { get; set; }
+        public int CantidadCalificacion { get; set; }
         public Autor Autor { get; set; }
     }
 }

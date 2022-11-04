@@ -14,6 +14,7 @@ namespace WebApiLibrary.Models
         [Required]
         public DateTime FechaDeNacimiento { get; set; }
         public List<Libro> Libros { get; set; }
+        public List<Usuario> UsuariosSuscritos { get; set; }
 
     }
 }
