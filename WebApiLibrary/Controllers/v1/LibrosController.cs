@@ -47,9 +47,9 @@ namespace WebApiLibrary.Controllers.v1
                 queryable = queryable.Where(x => x.FechaDePublicacion > librosDTO.after);
             }
 
-            if (librosDTO.order != null)
+            if (librosDTO.sort != null)
             {
-                if ((bool)librosDTO.order)
+                if ((bool)librosDTO.sort)
                 {
                     queryable = queryable.OrderBy(x => x.PromedioCalificacion);
                 }
@@ -116,9 +116,9 @@ namespace WebApiLibrary.Controllers.v1
                 queryable = queryable.Where(x => x.Calificacion == filterdto.reviewType);
             }
 
-            if (filterdto.order != null)
+            if (filterdto.sort != null)
             {
-                if ((bool)filterdto.order)
+                if ((bool)filterdto.sort)
                 {
                     queryable = queryable.OrderBy(x => x.Fecha);
                 }

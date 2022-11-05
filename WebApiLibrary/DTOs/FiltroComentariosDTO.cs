@@ -6,6 +6,6 @@ namespace WebApiLibrary.DTOs
     {
         public EnumCalificacion? reviewType { get; set; } = null;
 
-        public bool? order { get; set; } = null;
+        public bool? sort { get; set; } = null;
     }
 }

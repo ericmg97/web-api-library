@@ -6,7 +6,7 @@
         public string editorialName { get; set; } = null;
         public DateTime? before { get; set; } = null;
         public DateTime? after { get; set; } = null;
-        public bool? order { get; set; } = null;
+        public bool? sort { get; set; } = null;
 
 
     }
